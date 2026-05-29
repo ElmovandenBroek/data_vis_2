@@ -10,7 +10,7 @@
   "height": 500,
 
   "data": {
-    "url": "../data/species_2.csv"
+    "url": "/data/species_2.csv"
   },
 
   "mark": {
