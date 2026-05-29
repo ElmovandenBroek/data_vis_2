@@ -10,7 +10,7 @@
   "height": 330,
 
   "data": {
-    "url": "/data/capad_animation_dataset_corrected.csv"
+    "url": "data/capad_animation_dataset_corrected.csv"
   },
 
   "params": [
