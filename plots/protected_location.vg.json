@@ -25,7 +25,7 @@
   "layer": [
     {
       "data": {
-        "url": "/geo_data/ibra_regions_simplified.topojson",
+        "url": "geo_data/ibra_regions_simplified.topojson",
         "format": {
           "type": "topojson",
           "feature": "ibra_regions"
@@ -40,7 +40,7 @@
     },
     {
       "data": {
-        "url": "/geo_data/protected_areas_clean.topojson",
+        "url": "geo_data/protected_areas_clean.topojson",
         "format": {
           "type": "topojson",
           "feature": "protected_areas"
