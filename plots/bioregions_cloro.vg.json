@@ -1,0 +1,96 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 1000,
+  "title": {
+    "text": "Australia's Bioregions",
+    "subtitle": "The 89 IBRA regions that form the basis of Australia's national biodiversity planning framework"
+  },
+  "height": 650,
+  "projection": {
+    "type": "mercator",
+    "center": [
+      134,
+      -26
+    ],
+    "scale": 850
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "../geo_data/ibra_regions_simplified.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ibra_regions"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#333333",
+        "strokeWidth": 0.35
+      },
+      "encoding": {
+        "color": {
+          "field": "properties.IBRA_REG_C",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "scheme": "tableau20"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "properties.IBRA_REG_C",
+            "title": "Code"
+          },
+          {
+            "field": "properties.IBRA_REG_N",
+            "title": "Full region name"
+          },
+          {
+            "field": "properties.STATE",
+            "title": "State/Territory"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "../data/ibra_region_labels.csv"
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 9,
+        "fontWeight": "bold",
+        "fill": "black"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "label_lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "label_lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "ibra_code",
+          "type": "nominal"
+        },
+        "tooltip": [
+          {
+            "field": "ibra_code",
+            "title": "Code"
+          },
+          {
+            "field": "ibra_name",
+            "title": "Full region name"
+          },
+          {
+            "field": "states",
+            "title": "State/Territory"
+          }
+        ]
+      }
+    }
+  ]
+}

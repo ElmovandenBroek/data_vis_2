@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+  <title>Australia Conservation Dashboard</title>
+
+  <style>
+    :root {
+      --bg: #edf3ee;
+      --panel: #ffffff;
+      --green-dark: #12372a;
+      --green: #1f5f3d;
+      --green-mid: #4f8f5b;
+      --green-light: #dcebdc;
+      --text: #172017;
+      --muted: #56645a;
+      --border: #cddccc;
+      --shadow: 0 8px 24px rgba(18, 55, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top left, #f7fff7 0, var(--bg) 380px, #e7efe8 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #12372a, #245b3b 58%, #6b9b65);
+      color: white;
+      padding: 34px 22px 28px;
+      border-bottom: 5px solid #a7c79d;
+    }
+
+    .header-inner {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 50px);
+      letter-spacing: -0.04em;
+      line-height: 1.02;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 950px;
+      color: #edf7ed;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(1500px, calc(100vw - 28px));
+      margin: 18px auto 34px;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1.45fr 0.9fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0 0 8px;
+      color: var(--green-dark);
+      line-height: 1.15;
+    }
+
+    .panel h2 {
+      font-size: 22px;
+    }
+
+    .panel h3 {
+      font-size: 17px;
+    }
+
+    .description {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .source {
+      margin: -2px 0 12px;
+      color: #496b50;
+      font-size: 12px;
+      line-height: 1.35;
+      background: #f0f7f0;
+      border-left: 3px solid var(--green-mid);
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+
+    .narrative-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .map-panel {
+      margin-bottom: 16px;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 16px 0;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-width: 360px;
+    }
+
+    .tabs button {
+      border: 1px solid #a7bea9;
+      background: #eef6ee;
+      color: var(--green-dark);
+      padding: 8px 11px;
+      cursor: pointer;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 13px;
+      transition: 0.15s ease;
+    }
+
+    .tabs button:hover {
+      background: #dcebdc;
+    }
+
+    .tabs button.active {
+      background: var(--green-dark);
+      color: white;
+      border-color: var(--green-dark);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .map-content {
+      padding: 8px 12px 14px;
+    }
+
+    .plot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .plot-card {
+      min-width: 0;
+    }
+
+    .plot-card.wide {
+      grid-column: span 2;
+    }
+
+    .plot-card.full,
+    .plot-card.featured {
+      grid-column: 1 / -1;
+    }
+
+    .wide-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(260px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .wide-text {
+      padding-top: 8px;
+    }
+
+    .wide-text .source {
+      margin-top: 10px;
+    }
+
+    .wide-layout .vis {
+      min-height: 420px;
+    }
+
+    .vis {
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .vega-embed,
+    .vega-embed details,
+    .vega-embed summary {
+      max-width: 100%;
+    }
+
+    .vega-embed svg,
+    .vega-embed canvas {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    .map-content .vis {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 520px;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #f7fbf7;
+      border-left: 5px solid var(--green-mid);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1250px) {
+      .plot-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .intro {
+        grid-template-columns: 1fr;
+      }
+
+      .map-header {
+        flex-direction: column;
+      }
+
+      .tabs {
+        justify-content: flex-start;
+        min-width: 0;
+      }
+
+      .plot-card.wide,
+      .plot-card.featured {
+        grid-column: 1 / -1;
+      }
+
+      .wide-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .wide-layout .vis {
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      main {
+        width: min(100vw - 18px, 1500px);
+      }
+
+      header {
+        padding: 24px 14px 22px;
+      }
+
+      .plot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .plot-card.wide,
+      .plot-card.full,
+      .plot-card.featured {
+        grid-column: 1;
+      }
+
+      .map-content .vis {
+        min-height: 360px;
+      }
+
+      .wide-layout .vis {
+        min-height: 320px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>Australia’s Conservation Story</h1>
+      <p>
+        Australia protects a very large land area. The maps show where protection sits; the charts ask what kind of
+        protection it is, how it has changed.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <article class="panel">
+        <div class="panel-body">
+          <h2>Central narrative</h2>
+          <p class="description">
+            The story moves from landscape to biodiversity. First, the dashboard shows Australia’s bioregions and
+            protected-area geography. Then it compares how protection has expanded, which land-use categories dominate,
+            and how threatened animal data we take a look at how animal populations are doing in terrestrial Australia.
+          </p>
+          <ol class="narrative-list">
+            <li><strong>Where is conservation land?</strong> The map tabs compare bioregions, protected-area locations,
+              and protection percentages.</li>
+            <li><strong>What kind of protection dominates?</strong> The treemap and time-series plots show the structure
+              and growth of the protected estate.</li>
+            <li><strong>What about animals?</strong> The threatened-species plots show both risk composition and
+              monitoring concentration.</li>
+          </ol>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-body">
+          <h2>About</h2>
+
+          <ul class="description">
+            <li>
+              <strong>IBRA (Interim Biogeographic Regionalisation for Australia):</strong>
+              A scientific framework that divides Australia into distinct ecological regions based on geology,
+              landforms, climate, vegetation, and biodiversity to support conservation planning and environmental
+              management.
+            </li>
+
+            <li>
+              <strong>CAPAD (Collaborative Australian Protected Areas Database):</strong>
+              Australia's national database of protected areas, compiling information on the location, size, type, and
+              management of national parks, nature reserves, and other conservation lands across the country.
+            </li>
+
+            <li>
+              <strong>How to use this dashboard:</strong>
+              Use the buttons in the main map panel to switch between the four spatial views. All other plots remain
+              visible below as supporting evidence. State colours correspond to the official colours used by Australian
+              jurisdictions.
+            </li>
+          </ul>
+
+        </div>
+      </article>
+    </section>
+
+    <section class="panel map-panel">
+      <div class="map-header">
+        <div>
+          <h2>1–4. Spatial foundation: where protection sits</h2>
+          <p class="description">
+            These four map views establish the geographical basis of the dashboard: ecological regions, protection
+            percentages by IBRA region, protected-area boundaries, and national park locations.
+          </p>
+          <p class="source">
+            <strong>Sources:</strong> IBRA regions TopoJSON for map geometry; CAPAD 2024 terrestrial protected-area data
+            for protected areas, IBRA protection percentages, and park locations.
+          </p>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-button active" data-tab="tab-ibra">IBRA regions</button>
+          <button class="tab-button" data-tab="tab-region-protection">Protected % by IBRA</button>
+          <button class="tab-button" data-tab="tab-protected-areas">National Parks</button>
+          <button class="tab-button" data-tab="tab-protected-location">Protected Areas</button>
+        </div>
+      </div>
+
+      <div class="map-content">
+        <div id="tab-ibra" class="tab-content active">
+          <div id="bioregions_map" class="vis"></div>
+        </div>
+
+        <div id="tab-region-protection" class="tab-content">
+          <div id="ibra_protected_percentage_map" class="vis"></div>
+        </div>
+
+        <div id="tab-protected-areas" class="tab-content">
+          <div id="protected_areas_map" class="vis"></div>
+        </div>
+
+        <div id="tab-protected-location" class="tab-content">
+          <div id="protected_location_map" class="vis"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plot-grid">
+      <article class="panel plot-card featured">
+        <div class="panel-body">
+          <div class="wide-layout">
+            <div id="protected_land_over_time" class="vis"></div>
+
+            <div class="wide-text">
+              <h3>5. Protected land over time</h3>
+              <p class="description">
+                Shows how Australia's protected estate has expanded over time and provides temporal context for the
+                current conservation network.
+              </p>
+              <p class="source">
+                <strong>Source:</strong> CAPAD national protected-area releases, aggregated by year.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel plot-card featured">
+        <div class="panel-body">
+          <div class="wide-layout">
+            <div id="size_vs_protected" class="vis"></div>
+
+            <div class="wide-text">
+              <h3>6. Size vs protected area</h3>
+              <p class="description">
+                This scatter plot compares the total area of each jurisdiction or bioregion with the amount of
+                protected land it contains, revealing whether larger regions tend to have more protected land. Use the
+                slider to see changes over time.
+              </p>
+              <p class="source">
+                <strong>Source:</strong> CAPAD 2024 and IBRA region area data.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel plot-card featured">
+        <div class="panel-body">
+          <div class="wide-layout">
+            <div id="protected_area_by_state_animated_side" class="vis"></div>
+
+            <div class="wide-text">
+              <h3>7. Animated protected-area change</h3>
+              <p class="description">
+                Shows how protected-area coverage changes through time across jurisdictions. Use the slider to see
+                changes over time.
+              </p>
+              <p class="source">
+                <strong>Source:</strong> CAPAD protected-area area by state and year.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel plot-card wide">
+        <div class="panel-body">
+          <div class="wide-layout">
+            <div id="iucn_treemap" class="vis"></div>
+
+            <div class="wide-text">
+              <h3>8. IUCN protected-area categories</h3>
+              <p class="description">
+                The treemap shows what kind of conservation land dominates: strict reserves, national parks, protected
+                landscapes, or sustainable-use areas. The International Union for Conservation of Nature (IUCN) is a
+                global environmental organization that develops international standards for nature conservation,
+                including the widely used system for classifying protected areas according to their management
+                objectives and level of protection.
+              </p>
+              <p class="source">
+                <strong>Source:</strong> CAPAD 2024 IUCN category area totals.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel plot-card">
+        <div class="panel-body">
+          <h3>9. Threat status by animal group</h3>
+
+          <p class="description">
+            This 100% stacked bar chart compares birds, mammals, and reptiles by showing the share of monitored species
+            in each EPBC threat category. TSX tracks changes in threatened species populations over time, while the EPBC
+            Act provides Australia’s national legal framework for protecting threatened species and ecological
+            communities.
+          </p>
+
+          <p class="source">
+            <strong>Source:</strong> Australian Threatened Species Index 2025 terrestrial animal dataset, aggregated by
+            unique species and EPBC status.
+          </p>
+
+          <div id="threat_status_percent" class="vis"></div>
+        </div>
+      </article>
+
+      <article class="panel plot-card featured">
+        <div class="panel-body">
+          <div class="wide-layout">
+
+            <div id="top_monitored_animals" class="vis"></div>
+
+            <div class="wide-text">
+              <h3>10. Most monitored threatened animals</h3>
+
+              <p class="description">
+                This chart shows the threatened animal species with the highest number of monitoring records in the
+                Threatened Species Index (TSX). Species with more records have generally received greater conservation
+                monitoring effort, often reflecting their ecological importance, threat level, or recovery priorities.
+              </p>
+
+              <p class="description">
+                <strong>TSX (Threatened Species Index):</strong> The Threatened Species Index is an Australian
+                biodiversity indicator that tracks changes in the population abundance of threatened species over time,
+                showing how species at risk of extinction are faring.
+              </p>
+
+              <p class="description">
+                <strong>EPBC Act (Environment Protection and Biodiversity Conservation Act):</strong> The Environment
+                Protection and Biodiversity Conservation Act 1999 is Australia's primary national environmental law,
+                providing legal protection for threatened species, ecological communities, and other matters of national
+                environmental significance.
+              </p>
+
+              <p class="source">
+                <strong>Source:</strong> Australian Threatened Species Index 2025 terrestrial animal monitoring records.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const embeddedCharts = {};
+
+    const tabCharts = {
+      "tab-ibra": {
+        id: "#bioregions_map",
+        path: "./plots/bioregions_cloro.vg.json"
+      },
+      "tab-region-protection": {
+        id: "#ibra_protected_percentage_map",
+        path: "./plots/ibra_protected_percentage.vg.json"
+      },
+      "tab-protected-areas": {
+        id: "#protected_areas_map",
+        path: "./plots/protected_areas.vg.json"
+      },
+      "tab-protected-location": {
+        id: "#protected_location_map",
+        path: "./plots/protected_location.vg.json"
+      }
+    };
+
+    function embedChartOnce(id, path) {
+      if (!embeddedCharts[id]) {
+        embeddedCharts[id] = vegaEmbed(id, path, {
+          actions: false,
+          renderer: "svg"
+        }).catch(error => {
+          document.querySelector(id).innerHTML =
+            `<p class="description">Could not load ${path}. Check that the file path exists.</p>`;
+          console.error(error);
+        });
+      }
+
+      return embeddedCharts[id];
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.remove("active");
+      });
+
+      document.querySelectorAll(".tab-button").forEach(button => {
+        button.classList.remove("active");
+      });
+
+      document.getElementById(tabId).classList.add("active");
+      document.querySelector(`[data-tab="${tabId}"]`).classList.add("active");
+
+      const chart = tabCharts[tabId];
+      embedChartOnce(chart.id, chart.path);
+    }
+
+    document.querySelectorAll(".tab-button").forEach(button => {
+      button.addEventListener("click", () => {
+        showTab(button.dataset.tab);
+      });
+    });
+
+    showTab("tab-ibra");
+
+    embedChartOnce("#protected_land_over_time", "./plots/protected_land_over_time.vg.json");
+    embedChartOnce("#size_vs_protected", "./plots/size_vs_protected_scatter.vg.json");
+    embedChartOnce("#protected_area_by_state_animated_side", "./plots/protected_area_by_state_animated.vg.json");
+    embedChartOnce("#iucn_treemap", "./plots/treemap.vg.json");
+    embedChartOnce("#threat_status_percent", "./plots/species.vg.json");
+    embedChartOnce("#top_monitored_animals", "./plots/species_1.vg.json");
+  </script>
+</body>
+
+</html>

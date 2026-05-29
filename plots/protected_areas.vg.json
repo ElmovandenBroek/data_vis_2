@@ -1,0 +1,108 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Australia's Largest National Parks",
+    "subtitle": "Proportional symbol map using CAPAD protected area data"
+  },
+  "width": 900,
+  "height": 600,
+  "projection": {
+    "type": "mercator",
+    "center": [134, -28],
+    "scale": 750
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "../geo_data/ibra_regions_simplified.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ibra_regions"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#f2f2f2",
+        "stroke": "#bdbdbd",
+        "strokeWidth": 0.4
+      }
+    },
+    {
+      "data": {
+        "url": "../data/Protected_Areas_(CAPAD).csv"
+      },
+      "transform": [
+        {
+          "filter": "datum.TYPE == 'National Park'"
+        },
+        {
+          "filter": "isValid(datum.LONGITUDE) && isValid(datum.LATITUDE) && datum.GIS_AREA > 0"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "opacity": 0.75,
+        "stroke": "white",
+        "strokeWidth": 0.6
+      },
+      "encoding": {
+        "longitude": {
+          "field": "LONGITUDE",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "LATITUDE",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "GIS_AREA",
+          "type": "quantitative",
+          "title": "Park size (ha)",
+          "scale": {
+            "type": "sqrt",
+            "range": [15, 3000]
+          }
+        },
+        "color": {
+          "field": "STATE",
+          "type": "nominal",
+          "title": "State / territory",
+          "scale": {
+            "domain": ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"],
+            "range": [
+              "#0047AB",
+              "#87CEEB",
+              "#C65A00",
+              "#7A1831",
+              "#D50032",
+              "#006A4E",
+              "#003B5C",
+              "#FFD100"
+            ]
+          }
+        },
+        "tooltip": [
+          { "field": "NAME", "type": "nominal", "title": "Park" },
+          { "field": "STATE", "type": "nominal", "title": "State" },
+          { "field": "TYPE", "type": "nominal", "title": "Type" },
+          { "field": "GIS_AREA", "type": "quantitative", "title": "Area (ha)", "format": "," },
+          { "field": "IUCN", "type": "nominal", "title": "IUCN" }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "background": "white",
+    "view": {
+      "stroke": null
+    },
+    "title": {
+      "color": "black",
+      "subtitleColor": "#555555"
+    },
+    "legend": {
+      "labelColor": "black",
+      "titleColor": "black"
+    }
+  }
+}

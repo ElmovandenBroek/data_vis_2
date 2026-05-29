@@ -1,0 +1,179 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "title": {
+    "text": "Does bigger mean better protected?",
+    "subtitle": "CAPAD terrestrial protected areas by Australian jurisdiction"
+  },
+
+  "width": 650,
+  "height": 400,
+
+  "data": {
+    "url": "../data/scatterplot_dataset.csv"
+  },
+
+  "params": [
+    {
+      "name": "selectedYear",
+      "value": 2024,
+      "bind": {
+        "input": "range",
+        "min": 2008,
+        "max": 2024,
+        "step": 2,
+        "name": "Year: "
+      }
+    }
+  ],
+
+  "transform": [
+    {
+      "filter": "datum.year == selectedYear"
+    }
+  ],
+
+  "mark": {
+    "type": "circle",
+    "opacity": 0.85,
+    "stroke": "#222222",
+    "strokeWidth": 0.8
+  },
+
+  "encoding": {
+    "x": {
+      "field": "jurisdiction_area_ha",
+      "type": "quantitative",
+      "title": "Total land area of jurisdiction (ha)",
+      "scale": {
+        "type": "log",
+        "domain": [200000, 3000000000]
+      },
+      "axis": {
+        "format": "~s",
+        "grid": true,
+        "labelFontSize": 12,
+        "titleFontSize": 13,
+        "gridColor": "#E6E6E6"
+      }
+    },
+
+    "y": {
+      "field": "percent_protected",
+      "type": "quantitative",
+      "title": "% of land protected",
+      "scale": {
+        "domain": [0, 60]
+      },
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 13,
+        "gridColor": "#E6E6E6"
+      }
+    },
+
+    "size": {
+      "field": "protected_area_ha",
+      "type": "quantitative",
+      "title": "Protected area (ha)",
+      "scale": {
+        "domain": [100000, 60000000],
+        "range": [150, 2500]
+      },
+      "legend": {
+        "format": "~s"
+      }
+    },
+
+    "color": {
+      "field": "jurisdiction",
+      "type": "nominal",
+      "title": "Jurisdiction",
+      "scale": {
+        "domain": [
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "range": [
+          "#0047AB",
+          "#87CEEB",
+          "#C65A00",
+          "#7A1831",
+          "#D50032",
+          "#006A4E",
+          "#003B5C",
+          "#FFD100"
+        ]
+      },
+      "legend": {
+        "orient": "right",
+        "labelFontSize": 11,
+        "titleFontSize": 12
+      }
+    },
+
+    "tooltip": [
+      {
+        "field": "year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "jurisdiction",
+        "type": "nominal",
+        "title": "Jurisdiction"
+      },
+      {
+        "field": "jurisdiction_area_ha",
+        "type": "quantitative",
+        "title": "Jurisdiction area (ha)",
+        "format": ","
+      },
+      {
+        "field": "protected_area_ha",
+        "type": "quantitative",
+        "title": "Protected area (ha)",
+        "format": ","
+      },
+      {
+        "field": "percent_protected",
+        "type": "quantitative",
+        "title": "% protected",
+        "format": ".1f"
+      }
+    ]
+  },
+
+  "config": {
+    "background": "#FAFAF7",
+
+    "view": {
+      "stroke": null
+    },
+
+    "title": {
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "anchor": "start",
+      "color": "#222222"
+    },
+
+    "axis": {
+      "labelFont": "sans-serif",
+      "titleFont": "sans-serif",
+      "labelColor": "#444444",
+      "titleColor": "#222222"
+    },
+
+    "legend": {
+      "labelFont": "sans-serif",
+      "titleFont": "sans-serif"
+    }
+  }
+}

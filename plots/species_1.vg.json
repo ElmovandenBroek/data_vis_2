@@ -1,0 +1,75 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "title": {
+    "text": "Most Monitored Threatened Animals in the TSX Database",
+    "subtitle": "Top monitored animal species by number of monitoring time series"
+  },
+
+  "width": 700,
+  "height": 500,
+
+  "data": {
+    "url": "../data/species_2.csv"
+  },
+
+  "mark": {
+    "type": "bar"
+  },
+
+  "encoding": {
+    "y": {
+      "field": "CommonName",
+      "type": "nominal",
+      "sort": "-x",
+      "title": null
+    },
+
+    "x": {
+      "field": "monitoring_records",
+      "type": "quantitative",
+      "title": "Monitoring time series"
+    },
+
+    "color": {
+      "field": "TaxonomicGroup",
+      "type": "nominal",
+      "title": "Animal group",
+      "scale": {
+        "domain": ["Birds", "Mammals", "Reptiles"],
+        "range": ["#2e7d32", "#8d6e63", "#558b2f"]
+      }
+    },
+
+    "tooltip": [
+      {
+        "field": "CommonName",
+        "title": "Species"
+      },
+      {
+        "field": "TaxonomicGroup",
+        "title": "Group"
+      },
+      {
+        "field": "MaxStatus",
+        "title": "Threat status"
+      },
+      {
+        "field": "monitoring_records",
+        "title": "Monitoring records",
+        "format": ","
+      },
+      {
+        "field": "total_surveys",
+        "title": "Survey count",
+        "format": ","
+      }
+    ]
+  },
+
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

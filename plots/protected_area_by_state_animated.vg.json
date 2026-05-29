@@ -1,0 +1,145 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "title": {
+    "text": "Protected land by Australian jurisdiction over time",
+    "subtitle": "CAPAD terrestrial protected areas, excluding External Territories and Jervis Bay Territory"
+  },
+
+  "width": 650,
+  "height": 330,
+
+  "data": {
+    "url": "../data/capad_animation_dataset_corrected.csv"
+  },
+
+  "params": [
+    {
+      "name": "selectedYear",
+      "value": 2024,
+      "bind": {
+        "input": "range",
+        "min": 2008,
+        "max": 2024,
+        "step": 2,
+        "name": "Year: "
+      }
+    }
+  ],
+
+  "transform": [
+    {
+      "filter": "datum.year == selectedYear"
+    }
+  ],
+
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 6
+  },
+
+  "encoding": {
+    "y": {
+      "field": "jurisdiction",
+      "type": "nominal",
+      "sort": "-x",
+      "title": null,
+      "axis": {
+        "labelFontSize": 13,
+        "labelColor": "#333",
+        "ticks": false,
+        "domain": false
+      }
+    },
+
+    "x": {
+      "field": "percent_protected",
+      "type": "quantitative",
+      "title": "% of land protected",
+      "scale": {
+        "domain": [0, 60]
+      },
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 14,
+        "gridColor": "#E6E6E6",
+        "tickCount": 6
+      }
+    },
+
+    "color": {
+      "field": "jurisdiction",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+        "domain": [
+          "Australian Capital Territory",
+          "New South Wales",
+          "Northern Territory",
+          "Queensland",
+          "South Australia",
+          "Tasmania",
+          "Victoria",
+          "Western Australia"
+        ],
+        "range": [
+          "#0047AB",
+          "#87CEEB",
+          "#C65A00",
+          "#7A1831",
+          "#D50032",
+          "#006A4E",
+          "#003B5C",
+          "#FFD100"
+        ]
+      }
+    },
+
+    "tooltip": [
+      {
+        "field": "year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "jurisdiction",
+        "type": "nominal",
+        "title": "Jurisdiction"
+      },
+      {
+        "field": "percent_protected",
+        "type": "quantitative",
+        "title": "% protected",
+        "format": ".1f"
+      },
+      {
+        "field": "protected_area_ha",
+        "type": "quantitative",
+        "title": "Protected area (ha)",
+        "format": ","
+      }
+    ]
+  },
+
+  "config": {
+    "background": "#FAFAF7",
+
+    "view": {
+      "stroke": null
+    },
+
+    "title": {
+      "fontSize": 22,
+      "subtitleFontSize": 13,
+      "anchor": "start",
+      "color": "#222"
+    },
+
+    "axis": {
+      "labelFont": "sans-serif",
+      "titleFont": "sans-serif",
+      "labelColor": "#444",
+      "titleColor": "#222"
+    }
+  }
+}

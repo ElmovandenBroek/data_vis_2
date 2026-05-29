@@ -1,0 +1,91 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "title": {
+    "text": "Threat Status Composition by Taxonomic Group",
+    "subtitle": "Percentage of monitored TSX species by EPBC threat status"
+  },
+
+  "width": 650,
+  "height": 320,
+
+  "data": {
+    "url": "../data/threatened_species_by_group.csv"
+  },
+
+  "mark": {
+    "type": "bar"
+  },
+
+  "encoding": {
+    "y": {
+      "field": "TaxonomicGroup",
+      "type": "nominal",
+      "sort": ["Birds", "Mammals", "Reptiles"],
+      "title": null
+    },
+
+    "x": {
+      "field": "percent",
+      "type": "quantitative",
+      "stack": "normalize",
+      "title": "Share of species",
+      "axis": {
+        "format": ".0%"
+      }
+    },
+
+    "color": {
+      "field": "EPBCStatus",
+      "type": "nominal",
+      "title": "Threat status",
+      "scale": {
+        "domain": [
+          "Critically Endangered",
+          "Endangered",
+          "Vulnerable"
+        ],
+        "range": [
+          "#c62828",
+          "#f9a825",
+          "#81c784"
+        ]
+      },
+      "legend": {
+        "orient": "bottom"
+      }
+    },
+
+    "tooltip": [
+      {
+        "field": "TaxonomicGroup",
+        "title": "Group"
+      },
+      {
+        "field": "EPBCStatus",
+        "title": "Status"
+      },
+      {
+        "field": "species_count",
+        "title": "Species",
+        "format": ","
+      },
+      {
+        "field": "group_total",
+        "title": "Group total",
+        "format": ","
+      },
+      {
+        "field": "percent",
+        "title": "Share",
+        "format": ".1f"
+      }
+    ]
+  },
+
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 1000,
+  "height": 650,
+
+  "title": {
+    "text": "Protected Land by IBRA Region",
+    "subtitle": "Percentage of each IBRA bioregion protected under CAPAD 2024",
+    "anchor": "middle"
+  },
+
+  "projection": {
+    "type": "mercator",
+    "center": [134, -26],
+    "scale": 850
+  },
+
+  "layer": [
+    {
+      "data": {
+        "url": "../geo_data/ibra_regions_simplified.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ibra_regions"
+        }
+      },
+
+      "transform": [
+        {
+          "lookup": "properties.IBRA_REG_N",
+          "from": {
+            "data": {
+              "url": "../data/capad_2024_ibra_regions_map_ready.csv"
+            },
+            "key": "ibra_region_name",
+            "fields": [
+              "ibra_region_code",
+              "jurisdictions",
+              "ibra_area_ha",
+              "area_protected_ha",
+              "unprotected_area_ha",
+              "percent_protected",
+              "protected_band"
+            ]
+          }
+        }
+      ],
+
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#333333",
+        "strokeWidth": 0.35
+      },
+
+      "encoding": {
+        "color": {
+          "field": "percent_protected",
+          "type": "quantitative",
+          "title": "% Protected",
+          "scale": {
+            "scheme": "greens",
+            "domain": [0, 100]
+          }
+        },
+
+        "tooltip": [
+          {
+            "field": "properties.IBRA_REG_C",
+            "title": "Code"
+          },
+          {
+            "field": "properties.IBRA_REG_N",
+            "title": "IBRA Region"
+          },
+          {
+            "field": "properties.STATE",
+            "title": "State/Territory"
+          },
+          {
+            "field": "percent_protected",
+            "title": "% Protected",
+            "format": ".1f"
+          },
+          {
+            "field": "area_protected_ha",
+            "title": "Protected Area (ha)",
+            "format": ",.0f"
+          },
+          {
+            "field": "ibra_area_ha",
+            "title": "Total IBRA Area (ha)",
+            "format": ",.0f"
+          },
+          {
+            "field": "protected_band",
+            "title": "Protection Band"
+          }
+        ]
+      }
+    },
+
+    {
+      "data": {
+        "url": "../data/ibra_region_labels.csv"
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 9,
+        "fontWeight": "bold",
+        "fill": "black"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "label_lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "label_lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "ibra_code",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

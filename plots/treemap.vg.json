@@ -1,0 +1,132 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 700,
+  "height": 500,
+
+  "title": {
+    "text": "Australia's Protected Estate by IUCN Category",
+    "subtitle": "Area protected under each conservation category (CAPAD 2024)"
+  },
+
+  "data": [
+    {
+      "name": "table",
+      "url": "../data/treemap.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "area_ha": "number",
+          "count": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "datum.category == 'Habitat Management Area' ? 'Habitat\\nManagement' : datum.category == 'Sustainable Use Area' ? 'Sustainable\\nUse' : datum.category == 'Strict Nature Reserve' ? 'Strict Nature\\nReserve' : datum.category == 'Protected Landscape' ? 'Protected\\nLandscape' : datum.category"
+        },
+        {
+          "type": "nest",
+          "keys": ["category"]
+        },
+        {
+          "type": "treemap",
+          "field": "area_ha",
+          "sort": {
+            "field": "area_ha",
+            "order": "descending"
+          },
+          "round": true,
+          "size": [
+            { "signal": "width" },
+            { "signal": "height" }
+          ],
+          "padding": 2
+        },
+        {
+          "type": "formula",
+          "as": "box_width",
+          "expr": "datum.x1 - datum.x0"
+        },
+        {
+          "type": "formula",
+          "as": "box_height",
+          "expr": "datum.y1 - datum.y0"
+        },
+        {
+          "type": "formula",
+          "as": "show_label",
+          "expr": "datum.box_width > 90 && datum.box_height > 45"
+        }
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "color",
+      "type": "linear",
+      "domain": {
+        "data": "table",
+        "field": "area_ha"
+      },
+      "range": [
+        "#e8f5e9",
+        "#c8e6c9",
+        "#81c784",
+        "#388e3c",
+        "#1b5e20"
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": { "data": "table" },
+      "encode": {
+        "enter": {
+          "x": { "field": "x0" },
+          "y": { "field": "y0" },
+          "x2": { "field": "x1" },
+          "y2": { "field": "y1" },
+          "stroke": { "value": "white" },
+          "strokeWidth": { "value": 2 },
+          "tooltip": {
+            "signal": "{'Category': datum.category, 'Area protected (ha)': format(datum.area_ha, ',.0f'), 'Number of areas': format(datum.count, ',.0f')}"
+          }
+        },
+        "update": {
+          "fill": {
+            "scale": "color",
+            "field": "area_ha"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "table" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "(datum.x0 + datum.x1) / 2" },
+          "y": { "signal": "(datum.y0 + datum.y1) / 2" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "fontSize": { "value": 13 },
+          "fontWeight": { "value": "bold" },
+          "lineBreak": { "value": "\n" },
+          "text": { "field": "label" }
+        },
+        "update": {
+          "opacity": {
+            "signal": "datum.show_label ? 1 : 0"
+          },
+          "fill": {
+            "signal": "datum.area_ha > 20000000 ? 'white' : '#1b1b1b'"
+          }
+        }
+      }
+    }
+  ]
+}

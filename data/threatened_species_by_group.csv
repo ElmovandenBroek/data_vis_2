@@ -1,0 +1,10 @@
+TaxonomicGroup,EPBCStatus,species_count,group_total,percent
+Birds,Critically Endangered,5,39,12.82
+Birds,Endangered,22,39,56.41
+Birds,Vulnerable,12,39,30.77
+Mammals,Critically Endangered,5,62,8.06
+Mammals,Endangered,28,62,45.16
+Mammals,Vulnerable,29,62,46.77
+Reptiles,Critically Endangered,5,13,38.46
+Reptiles,Endangered,5,13,38.46
+Reptiles,Vulnerable,3,13,23.08

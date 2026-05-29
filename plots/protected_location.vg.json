@@ -1,0 +1,69 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "title": {
+    "text": "Where Are Australia’s Protected Areas Concentrated?",
+    "subtitle": [
+      "CAPAD protected-area boundaries over IBRA bioregions",
+      "Dark green outlines show individual protected areas; grey polygons show IBRA regions"
+    ],
+    "anchor": "middle",
+    "fontSize": 20,
+    "subtitleFontSize": 12,
+    "subtitleColor": "#555555"
+  },
+
+  "width": 900,
+  "height": 600,
+
+  "projection": {
+    "type": "mercator",
+    "center": [134, -28],
+    "scale": 750
+  },
+
+  "layer": [
+    {
+      "data": {
+        "url": "../geo_data/ibra_regions_simplified.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ibra_regions"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#f4f4f4",
+        "stroke": "#c8c8c8",
+        "strokeWidth": 0.5
+      }
+    },
+    {
+      "data": {
+        "url": "../geo_data/protected_areas_clean.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "protected_areas"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "filled": false,
+        "stroke": "#006A4E",
+        "strokeWidth": 0.65,
+        "opacity": 0.9
+      }
+    }
+  ],
+
+  "config": {
+    "background": "white",
+    "view": {
+      "stroke": null
+    },
+    "title": {
+      "font": "Arial",
+      "color": "#111111"
+    }
+  }
+}

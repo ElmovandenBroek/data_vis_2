@@ -1,0 +1,85 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text": "Protected land over time by Australian jurisdiction",
+        "subtitle": "CAPAD terrestrial protected areas, excluding External Territories and Jervis Bay Territory"
+    },
+    "width": 700,
+    "height": 380,
+    "data": {
+        "url": "../data/capad_animation_dataset_corrected.csv"
+    },
+    "mark": {
+        "type": "line",
+        "point": true
+    },
+    "encoding": {
+        "x": {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+        },
+        "y": {
+            "field": "percent_protected",
+            "type": "quantitative",
+            "title": "% of land protected",
+            "scale": {
+                "domain": [
+                    0,
+                    60
+                ]
+            }
+        },
+        "color": {
+            "field": "jurisdiction",
+            "type": "nominal",
+            "title": "Jurisdiction",
+            "scale": {
+                "domain": [
+                    "Australian Capital Territory",
+                    "New South Wales",
+                    "Northern Territory",
+                    "Queensland",
+                    "South Australia",
+                    "Tasmania",
+                    "Victoria",
+                    "Western Australia"
+                ],
+                "range": [
+                    "#0047AB",
+                    "#87CEEB",
+                    "#C65A00",
+                    "#7A1831",
+                    "#D50032",
+                    "#006A4E",
+                    "#003B5C",
+                    "#FFD100"
+                ]
+            }
+        },
+        "tooltip": [
+            {
+                "field": "year",
+                "type": "ordinal",
+                "title": "Year"
+            },
+            {
+                "field": "jurisdiction",
+                "type": "nominal",
+                "title": "Jurisdiction"
+            },
+            {
+                "field": "percent_protected",
+                "type": "quantitative",
+                "title": "% protected",
+                "format": ".1f"
+            },
+            {
+                "field": "protected_area_ha",
+                "type": "quantitative",
+                "title": "Protected area (ha)",
+                "format": ","
+            }
+        ]
+    }
+}
