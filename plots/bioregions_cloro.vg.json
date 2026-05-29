@@ -17,7 +17,7 @@
   "layer": [
     {
       "data": {
-        "url": "../geo_data/ibra_regions_simplified.topojson",
+        "url": "/geo_data/ibra_regions_simplified.topojson",
         "format": {
           "type": "topojson",
           "feature": "ibra_regions"
@@ -55,7 +55,7 @@
     },
     {
       "data": {
-        "url": "../data/ibra_region_labels.csv"
+        "url": "/data/ibra_region_labels.csv"
       },
       "mark": {
         "type": "text",
