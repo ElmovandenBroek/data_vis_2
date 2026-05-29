@@ -10,7 +10,7 @@
   "height": 320,
 
   "data": {
-    "url": "../data/threatened_species_by_group.csv"
+    "url": "/data/threatened_species_by_group.csv"
   },
 
   "mark": {
