@@ -7,7 +7,7 @@
     "width": 700,
     "height": 380,
     "data": {
-        "url": "../data/capad_animation_dataset_corrected.csv"
+        "url": "/data/capad_animation_dataset_corrected.csv"
     },
     "mark": {
         "type": "line",
