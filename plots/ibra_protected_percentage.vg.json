@@ -18,7 +18,7 @@
   "layer": [
     {
       "data": {
-        "url": "/geo_data/ibra_regions_simplified.topojson",
+        "url": "geo_data/ibra_regions_simplified.topojson",
         "format": {
           "type": "topojson",
           "feature": "ibra_regions"
@@ -30,7 +30,7 @@
           "lookup": "properties.IBRA_REG_N",
           "from": {
             "data": {
-              "url": "/data/capad_2024_ibra_regions_map_ready.csv"
+              "url": "data/capad_2024_ibra_regions_map_ready.csv"
             },
             "key": "ibra_region_name",
             "fields": [
@@ -101,7 +101,7 @@
 
     {
       "data": {
-        "url": "/data/ibra_region_labels.csv"
+        "url": "data/ibra_region_labels.csv"
       },
       "mark": {
         "type": "text",
