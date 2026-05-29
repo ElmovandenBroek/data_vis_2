@@ -10,7 +10,7 @@
   "height": 400,
 
   "data": {
-    "url": "/data/scatterplot_dataset.csv"
+    "url": "data/scatterplot_dataset.csv"
   },
 
   "params": [
