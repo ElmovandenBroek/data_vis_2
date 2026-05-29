@@ -11,7 +11,7 @@
   "data": [
     {
       "name": "table",
-      "url": "/data/treemap.csv",
+      "url": "data/treemap.csv",
       "format": {
         "type": "csv",
         "parse": {
